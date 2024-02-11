@@ -6,6 +6,7 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import crazypants.enderio.base.item.travelstaff.ItemTeleportationStaff;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
@@ -208,6 +209,7 @@ public enum ModObject implements IModObjectBase {
     itemCoordSelector(ItemCoordSelector::create),
     itemLocationPrintout(ItemLocationPrintout::create),
     itemTravelStaff(ItemTravelStaff::create),
+    itemTeleportationStaff(ItemTeleportationStaff::create),
     itemRodOfReturn(ItemRodOfReturn::create),
     itemMagnet(ItemMagnet::create),
     blockEndermanSkull(BlockEndermanSkull::create, ModTileEntity.TileEndermanSkull),
