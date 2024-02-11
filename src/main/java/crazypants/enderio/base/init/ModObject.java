@@ -91,6 +91,7 @@ import crazypants.enderio.base.item.rodofreturn.ItemRodOfReturn;
 import crazypants.enderio.base.item.soulvial.ItemSoulVial;
 import crazypants.enderio.base.item.spawner.ItemBrokenSpawner;
 import crazypants.enderio.base.item.staffoflevity.ItemStaffOfLevity;
+import crazypants.enderio.base.item.travelstaff.ItemTeleportationStaff;
 import crazypants.enderio.base.item.travelstaff.ItemTravelStaff;
 import crazypants.enderio.base.item.xptransfer.ItemXpTransfer;
 import crazypants.enderio.base.item.yetawrench.ItemYetaWrench;
@@ -208,6 +209,7 @@ public enum ModObject implements IModObjectBase {
     itemCoordSelector(ItemCoordSelector::create),
     itemLocationPrintout(ItemLocationPrintout::create),
     itemTravelStaff(ItemTravelStaff::create),
+    itemTeleportationStaff(ItemTeleportationStaff::create),
     itemRodOfReturn(ItemRodOfReturn::create),
     itemMagnet(ItemMagnet::create),
     blockEndermanSkull(BlockEndermanSkull::create, ModTileEntity.TileEndermanSkull),

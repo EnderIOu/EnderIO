@@ -112,7 +112,6 @@ public class TravelController {
 
     public static boolean doBlink(@Nonnull ItemStack equipped, @Nonnull EnumHand hand, @Nonnull EntityPlayer player) {
         if (!doesHandAllowBlink(hand)) {
-
             return false;
         }
         Vector3d eye = Util.getEyePositionEio(player);
@@ -140,7 +139,7 @@ public class TravelController {
                 sample.add(eye);
                 // we test against our feets location
                 sample.y -= playerHeight;
-                if (doBlinkAround(player, equipped, hand, sample, true)) {
+                if (doBlinkAround(player, equipped, hand, TravelSource.STAFF_BLINK, sample, true)) {
                     return true;
                 }
             }
@@ -175,7 +174,7 @@ public class TravelController {
                 // we test against our feets location
                 sample.y -= playerHeight;
 
-                if (doBlinkAround(player, equipped, hand, sample, false)) {
+                if (doBlinkAround(player, equipped, hand, TravelSource.STAFF_BLINK, sample, false)) {
                     return true;
                 }
                 teleDistance++;
@@ -191,11 +190,81 @@ public class TravelController {
                 // we test against our feets location
                 sample.y -= playerHeight;
 
-                if (doBlinkAround(player, equipped, hand, sample, false)) {
+                if (doBlinkAround(player, equipped, hand, TravelSource.STAFF_BLINK, sample, false)) {
                     return true;
                 }
                 sampleDistance--;
                 teleDistance--;
+            }
+        }
+        return false;
+    }
+
+    public static boolean doTeleport(@Nonnull ItemStack equipped, @Nonnull EnumHand hand,
+                                     @Nonnull EntityPlayer player) {
+        TravelSource source = TravelSource.TELEPORT_STAFF_BLINK;
+
+        Vector3d eye = Util.getEyePositionEio(player);
+        Vector3d look = Util.getLookVecEio(player);
+
+        double playerHeight = player.getYOffset();
+        double teleDistance = TeleportConfig.rangeTeleportStaff2Blink.get() + 2;
+        Vec3d eye3 = new Vec3d(eye.x, eye.y, eye.z);
+
+        double maxDistance = TeleportConfig.rangeTeleportStaff2Block.get() + 2;
+        double currDistance = 0;
+        Vec3d pos = eye3;
+        boolean loop = true;
+        while (loop) {
+            double distance = 200;
+            if (maxDistance - currDistance < 200) {
+                distance = maxDistance - currDistance;
+                loop = false;
+            }
+            Vector3d sample = new Vector3d(look);
+            sample.scale(distance);
+            sample.add(eye);
+            Vec3d end = new Vec3d(sample.x, sample.y, sample.z);
+
+            RayTraceResult p = player.world.rayTraceBlocks(eye3, end, !TeleportConfig.enableBlinkNonSolidBlocks.get());
+            if (p != null) {
+                teleDistance = VecmathUtil.distance(eye, new Vector3d(p.getBlockPos().getX() + 0.5,
+                        p.getBlockPos().getY() + 0.5, p.getBlockPos().getZ() + 0.5));
+                break;
+            }
+
+            pos = end;
+            currDistance += distance;
+        }
+
+        Vector3d sample = new Vector3d(look);
+        sample.scale(TravelSource.TELEPORT_STAFF_BLINK.getMaxDistanceTravelled());
+        sample.add(eye);
+        Vec3d end = new Vec3d(sample.x, sample.y, sample.z);
+
+        RayTraceResult p = player.world.rayTraceBlocks(eye3, end, !TeleportConfig.enableBlinkNonSolidBlocks.get());
+        if (p != null) {
+            teleDistance = VecmathUtil.distance(eye, new Vector3d(p.getBlockPos().getX() + 0.5,
+                    p.getBlockPos().getY() + 0.5, p.getBlockPos().getZ() + 0.5));
+        }
+
+        double distanceIncrement = -2;
+        // Special case: if the targeted block is too close, we'll try to teleport through it.
+        if (teleDistance < 3) {
+            distanceIncrement = 2;
+        }
+
+        for (int i = 0; i < 8; i++) {
+            teleDistance += distanceIncrement;
+
+            sample.set(look);
+            sample.scale(teleDistance);
+            sample.add(eye);
+            // we test against our feets location
+            sample.y -= playerHeight;
+
+            if (doBlinkAround(player, equipped, hand, TravelSource.TELEPORT_STAFF_BLINK, sample, false)) {
+                return true;
             }
         }
         return false;
@@ -209,19 +278,19 @@ public class TravelController {
     }
 
     private static boolean doBlinkAround(@Nonnull EntityPlayer player, @Nonnull ItemStack equipped,
-                                         @Nonnull EnumHand hand, @Nonnull Vector3d sample,
+                                         @Nonnull EnumHand hand, TravelSource source, @Nonnull Vector3d sample,
                                          boolean conserveMomentum) {
-        if (doBlink(player, equipped, hand,
+        if (doBlink(player, equipped, hand, source,
                 new BlockPos((int) Math.floor(sample.x), (int) Math.floor(sample.y) - 1, (int) Math.floor(sample.z)),
                 conserveMomentum)) {
             return true;
         }
-        if (doBlink(player, equipped, hand,
+        if (doBlink(player, equipped, hand, source,
                 new BlockPos((int) Math.floor(sample.x), (int) Math.floor(sample.y), (int) Math.floor(sample.z)),
                 conserveMomentum)) {
             return true;
         }
-        if (doBlink(player, equipped, hand,
+        if (doBlink(player, equipped, hand, source,
                 new BlockPos((int) Math.floor(sample.x), (int) Math.floor(sample.y) + 1, (int) Math.floor(sample.z)),
                 conserveMomentum)) {
             return true;
@@ -230,9 +299,10 @@ public class TravelController {
     }
 
     private static boolean doBlink(@Nonnull EntityPlayer player, @Nonnull ItemStack equipped, @Nonnull EnumHand hand,
+                                   TravelSource source,
                                    @Nonnull BlockPos coord,
                                    boolean conserveMomentum) {
-        return travelToLocation(player, equipped, hand, TravelSource.STAFF_BLINK, coord, conserveMomentum);
+        return travelToLocation(player, equipped, hand, source, coord, conserveMomentum);
     }
 
     public static boolean showTargets() {
@@ -350,7 +420,7 @@ public class TravelController {
     private static boolean travelToLocation(@Nonnull EntityPlayer player, @Nonnull ItemStack equipped,
                                             @Nonnull EnumHand hand, @Nonnull TravelSource source,
                                             @Nonnull BlockPos coord, boolean conserveMomentum) {
-        if (source != TravelSource.STAFF_BLINK) {
+        if (source != TravelSource.STAFF_BLINK && source != TravelSource.TELEPORT_STAFF_BLINK) {
             TileEntity te = player.world.getTileEntity(coord);
             if (te instanceof ITravelAccessable) {
                 ITravelAccessable ta = (ITravelAccessable) te;
@@ -368,13 +438,13 @@ public class TravelController {
         }
 
         if (!isInRangeTarget(player, coord, source.getMaxDistanceTravelledSq())) {
-            if (source != TravelSource.STAFF_BLINK) {
+            if (source != TravelSource.STAFF_BLINK && source != TravelSource.TELEPORT_STAFF_BLINK) {
                 player.sendStatusMessage(Lang.GUI_TRAVEL_OUT_OF_RANGE.toChatServer(), true);
             }
             return false;
         }
         if (!isValidTarget(player, coord, source)) {
-            if (source != TravelSource.STAFF_BLINK) {
+            if (source != TravelSource.STAFF_BLINK && source != TravelSource.TELEPORT_STAFF_BLINK) {
                 player.sendStatusMessage(Lang.GUI_TRAVEL_INVALID_TARGET.toChatServer(), true);
             }
             return false;
@@ -424,7 +494,7 @@ public class TravelController {
                                          @Nonnull TravelSource source) {
         World w = player.world;
         BlockPos baseLoc = bc;
-        if (source != TravelSource.STAFF_BLINK) {
+        if (source != TravelSource.STAFF_BLINK && source != TravelSource.TELEPORT_STAFF_BLINK) {
             // targeting a block so go one up
             baseLoc = bc.offset(EnumFacing.UP);
         }

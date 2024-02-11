@@ -13,12 +13,21 @@ public final class TeleportConfig {
     public static final IValue<Integer> rangeBlocks = F.make("defaultTeleportRangeBlocks", 96, //
             "Default range of direct travel between blocks (e.g. Travel Anchors).").setRange(16, 16 * 32).sync();
 
-    public static final IValue<Integer> rangeItem2Block = F.make("defaultTeleportRangeItemToBlock", 256, //
-            "Default range of travel using an item to a block (e.g. Staff to Travel Anchors).").setRange(16, 16 * 32)
+    public static final IValue<Integer> rangeTravelStaff2Block = F.make("defaultTeleportRangeTravelStaffToBlock", 256, //
+            "Default range of travel using an item to a block (e.g. Staff to Travel Anchors).").setRange(16, 512)
             .sync();
 
-    public static final IValue<Integer> rangeItem2Blink = F.make("defaultTeleportRangeItem", 16, //
-            "Default range of travel using an item (e.g. Staff blinking).").setRange(4, 16 * 32).sync();
+    public static final IValue<Integer> rangeTeleportStaff2Block = F
+            .make("defaultTeleportRangeTeleportStaffToBlock", 2048, //
+                    "Default range of travel using an item to a block (e.g. Staff to Travel Anchors).")
+            .setRange(128, 4096)
+            .sync();
+
+    public static final IValue<Integer> rangeTravelStaff2Blink = F.make("defaultTeleportRangeTravelStaff", 16, //
+            "Default range of travel using an item (e.g. Staff blinking).").setRange(4, 256).sync();
+
+    public static final IValue<Integer> rangeTeleportStaff2Blink = F.make("defaultTeleportRangeTeleportStaff", 64, //
+            "Default range of travel using an item (e.g. Staff blinking).").setRange(16, 512).sync();
 
     public static final IValue<Float> costItem2Block = F.make("defaultTeleportEnergyCostItemToBlock", 250f, //
             "Default energy cost per block of distance of travel using an item to a block (e.g. Staff to Travel Anchors).")

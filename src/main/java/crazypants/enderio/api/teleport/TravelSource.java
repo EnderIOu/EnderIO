@@ -17,7 +17,7 @@ public enum TravelSource {
 
         @Override
         public int getMaxDistanceTravelled() {
-            return TeleportConfig.rangeItem2Block.get();
+            return TeleportConfig.rangeTravelStaff2Block.get();
         }
 
         @Override
@@ -29,12 +29,37 @@ public enum TravelSource {
 
         @Override
         public int getMaxDistanceTravelled() {
-            return TeleportConfig.rangeItem2Blink.get();
+            return TeleportConfig.rangeTravelStaff2Blink.get();
         }
 
         @Override
         public float getPowerCostPerBlockTraveledRF() {
             return TeleportConfig.costItem2Blink.get();
+        }
+    },
+
+    TELEPORT_STAFF(SoundRegistry.TRAVEL_SOURCE_ITEM) {
+
+        @Override
+        public int getMaxDistanceTravelled() {
+            return TeleportConfig.rangeTeleportStaff2Block.get();
+        }
+
+        @Override
+        public float getPowerCostPerBlockTraveledRF() {
+            return 0f;
+        }
+    },
+    TELEPORT_STAFF_BLINK(SoundRegistry.TRAVEL_SOURCE_ITEM) {
+
+        @Override
+        public int getMaxDistanceTravelled() {
+            return TeleportConfig.rangeTeleportStaff2Blink.get();
+        }
+
+        @Override
+        public float getPowerCostPerBlockTraveledRF() {
+            return 0f;
         }
     },
     TELEPAD(SoundRegistry.TELEPAD);
