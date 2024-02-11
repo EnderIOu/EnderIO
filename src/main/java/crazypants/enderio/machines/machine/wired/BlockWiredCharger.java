@@ -3,7 +3,6 @@ package crazypants.enderio.machines.machine.wired;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import crazypants.enderio.machines.config.config.ChargerConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.client.gui.GuiScreen;
@@ -28,6 +27,7 @@ import crazypants.enderio.base.paint.IPaintable;
 import crazypants.enderio.base.render.IBlockStateWrapper;
 import crazypants.enderio.base.render.IHaveTESR;
 import crazypants.enderio.base.render.IRenderMapper;
+import crazypants.enderio.machines.config.config.ChargerConfig;
 import crazypants.enderio.machines.init.MachineObject;
 
 public class BlockWiredCharger<T extends TileWiredCharger> extends AbstractPowerConsumerBlock<T>
