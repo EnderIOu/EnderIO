@@ -24,4 +24,9 @@ public final class ChargerConfig {
 
     public static final IValue<Boolean> singleCharger = F.make("singleCharger", false, //
             "If enabled, only a single wireless charger can carge a player even if multipe are in range.").sync();
+
+    public static final IValue<Boolean> respectsGravity = F
+            .make("respectsGravitySimple", true,
+                    "If true, the Simple Wired Charger will respect gravity and fall like an anvil when not attached to a block.")
+            .sync();
 }

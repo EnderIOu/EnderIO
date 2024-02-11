@@ -30,13 +30,13 @@ public class BlockAlloySmelter<T extends TileAlloySmelter> extends AbstractPower
                               implements IPaintable.ISolidBlockPaintableBlock, IPaintable.IWrenchHideablePaint {
 
     public static BlockAlloySmelter<TileAlloySmelter> create(@Nonnull IModObject modObject) {
-        BlockAlloySmelter<TileAlloySmelter> res = new BlockAlloySmelter<TileAlloySmelter>(modObject);
+        BlockAlloySmelter<TileAlloySmelter> res = new BlockAlloySmelter<>(modObject);
         res.init();
         return res;
     }
 
     public static BlockAlloySmelter<TileAlloySmelter.Simple> create_simple(@Nonnull IModObject modObject) {
-        BlockAlloySmelter<TileAlloySmelter.Simple> res = new BlockAlloySmelter<TileAlloySmelter.Simple>(modObject) {
+        BlockAlloySmelter<TileAlloySmelter.Simple> res = new BlockAlloySmelter<>(modObject) {
 
             @Override
             @SideOnly(Side.CLIENT)
@@ -56,7 +56,7 @@ public class BlockAlloySmelter<T extends TileAlloySmelter> extends AbstractPower
     }
 
     public static BlockAlloySmelter<TileAlloySmelter.Furnace> create_furnace(@Nonnull IModObject modObject) {
-        BlockAlloySmelter<TileAlloySmelter.Furnace> res = new BlockAlloySmelter<TileAlloySmelter.Furnace>(modObject) {
+        BlockAlloySmelter<TileAlloySmelter.Furnace> res = new BlockAlloySmelter<>(modObject) {
 
             @Override
             @SideOnly(Side.CLIENT)
@@ -70,12 +70,13 @@ public class BlockAlloySmelter<T extends TileAlloySmelter> extends AbstractPower
                 return RenderMappers.SIMPLE_BODY_MAPPER;
             }
         };
+        res.respectsGravity = AlloySmelterConfig.respectsGravity;
         res.init();
         return res;
     }
 
     public static BlockAlloySmelter<TileAlloySmelter> create_enhanced(@Nonnull IModObject modObject) {
-        BlockAlloySmelter<TileAlloySmelter> res = new BlockAlloySmelter<TileAlloySmelter>(modObject) {
+        BlockAlloySmelter<TileAlloySmelter> res = new BlockAlloySmelter<>(modObject) {
 
             @Override
             @SideOnly(Side.CLIENT)

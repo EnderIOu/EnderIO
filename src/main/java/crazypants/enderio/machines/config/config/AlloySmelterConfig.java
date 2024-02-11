@@ -21,7 +21,7 @@ public final class AlloySmelterConfig {
 
         private final @Nonnull OperatingProfile profile;
 
-        private Profile(OperatingProfile profile) {
+        Profile(OperatingProfile profile) {
             this.profile = profile;
         }
 
@@ -45,6 +45,6 @@ public final class AlloySmelterConfig {
 
     public static final IValue<Boolean> respectsGravity = F
             .make("respectsGravitySimple", true,
-                    "If true, the Simple Alloy Smelter will respect gravity and fall like an anvil when not attached to a block.")
+                    "If true, the Simple Alloy Smelter and the Simple Powered Furnace will respect gravity and fall like an anvil when not attached to a block.")
             .sync();
 }

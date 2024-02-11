@@ -3,6 +3,7 @@ package crazypants.enderio.machines.machine.wired;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import crazypants.enderio.machines.config.config.ChargerConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.client.gui.GuiScreen;
@@ -34,13 +35,13 @@ public class BlockWiredCharger<T extends TileWiredCharger> extends AbstractPower
                               IHaveTESR {
 
     public static BlockWiredCharger<TileWiredCharger> create(@Nonnull IModObject modObject) {
-        BlockWiredCharger<TileWiredCharger> res = new BlockWiredCharger<TileWiredCharger>(modObject);
+        BlockWiredCharger<TileWiredCharger> res = new BlockWiredCharger<>(modObject);
         res.init();
         return res;
     }
 
     public static BlockWiredCharger<TileWiredCharger.Enhanced> create_enhanced(@Nonnull IModObject modObject) {
-        BlockWiredCharger<TileWiredCharger.Enhanced> res = new BlockWiredCharger<TileWiredCharger.Enhanced>(modObject) {
+        BlockWiredCharger<TileWiredCharger.Enhanced> res = new BlockWiredCharger<>(modObject) {
 
             @Override
             @SideOnly(Side.CLIENT)
@@ -64,7 +65,7 @@ public class BlockWiredCharger<T extends TileWiredCharger> extends AbstractPower
     }
 
     public static BlockWiredCharger<TileWiredCharger.Simple> create_simple(@Nonnull IModObject modObject) {
-        BlockWiredCharger<TileWiredCharger.Simple> res = new BlockWiredCharger<TileWiredCharger.Simple>(modObject) {
+        BlockWiredCharger<TileWiredCharger.Simple> res = new BlockWiredCharger<>(modObject) {
 
             @Override
             @SideOnly(Side.CLIENT)
@@ -82,6 +83,7 @@ public class BlockWiredCharger<T extends TileWiredCharger> extends AbstractPower
             @SideOnly(Side.CLIENT)
             public void bindTileEntitySpecialRenderer() {}
         };
+        res.respectsGravity = ChargerConfig.respectsGravity;
         res.init();
         return res;
     }
