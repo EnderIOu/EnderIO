@@ -222,6 +222,7 @@ public class TileCrafter extends AbstractCapabilityMachineEntity implements IPai
                     addToOutputQueue(inv.getStackInSlot(j));
                 }
             }
+            cachedRecipe = null;
             return false;
         }
 
