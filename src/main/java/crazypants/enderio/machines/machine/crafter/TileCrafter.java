@@ -85,6 +85,9 @@ public class TileCrafter extends AbstractCapabilityMachineEntity implements IPai
 
     private FakePlayerEIO playerInst;
 
+    private IRecipe cachedRecipe = null;
+    private boolean recheckRecipe = true; // mainly for world/chunk load, since the cache is not persisted
+
     public TileCrafter() {
         this(CapacitorKey.CRAFTER_POWER_INTAKE, CapacitorKey.CRAFTER_POWER_BUFFER, CapacitorKey.CRAFTER_POWER_USE);
     }
@@ -161,6 +164,7 @@ public class TileCrafter extends AbstractCapabilityMachineEntity implements IPai
     private static final GameProfile DUMMY_PROFILE = new GameProfile(uuid, "[EioCrafter]");
 
     private boolean canCraft() {
+        if (cachedRecipe == null && !recheckRecipe) return false;
         int[] used = new int[9];
         int found = 0, required = 0;
         for (int j = 0; j < 9; j++) {
@@ -208,19 +212,23 @@ public class TileCrafter extends AbstractCapabilityMachineEntity implements IPai
         }
 
         // (2) Find a recipe
-        IRecipe recipe = CraftingManager.findMatchingRecipe(inv, world);
-        if (recipe == null) {
+        if (recheckRecipe) {
+            recheckRecipe = false;
+            cachedRecipe = CraftingManager.findMatchingRecipe(inv, world);
+        }
+        if (cachedRecipe == null || !cachedRecipe.matches(inv, world)) {
             for (int j = 0; j < 9; j++) {
                 if (!inv.getStackInSlot(j).isEmpty()) {
                     addToOutputQueue(inv.getStackInSlot(j));
                 }
             }
+            cachedRecipe = null;
             return false;
         }
 
         // (3) Craft
         ForgeHooks.setCraftingPlayer(getFakePlayer());
-        ItemStack output = recipe.getCraftingResult(inv);
+        ItemStack output = cachedRecipe.getCraftingResult(inv);
         output.onCrafting(world, getFakePlayer(), 1);
         NonNullList<ItemStack> remaining = CraftingManager.getRemainingItems(inv, world);
         ForgeHooks.setCraftingPlayer(null);
@@ -297,6 +305,7 @@ public class TileCrafter extends AbstractCapabilityMachineEntity implements IPai
 
         ItemStack matches = ItemStack.EMPTY;
         IRecipe recipe = CraftingManager.findMatchingRecipe(inv, world);
+        cachedRecipe = recipe;
         if (recipe != null) {
             matches = recipe.getRecipeOutput();
             if (Prep.isInvalid(matches)) {
