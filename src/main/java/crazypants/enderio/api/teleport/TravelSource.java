@@ -39,6 +39,7 @@ public enum TravelSource {
     },
 
     TELEPORT_STAFF(SoundRegistry.TRAVEL_SOURCE_ITEM) {
+
         @Override
         public int getMaxDistanceTravelled() {
             return TeleportConfig.rangeTeleportStaff2Block.get();
@@ -50,6 +51,7 @@ public enum TravelSource {
         }
     },
     TELEPORT_STAFF_BLINK(SoundRegistry.TRAVEL_SOURCE_ITEM) {
+
         @Override
         public int getMaxDistanceTravelled() {
             return TeleportConfig.rangeTeleportStaff2Blink.get();

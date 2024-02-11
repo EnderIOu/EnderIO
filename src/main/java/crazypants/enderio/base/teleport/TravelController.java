@@ -200,7 +200,8 @@ public class TravelController {
         return false;
     }
 
-    public static boolean doTeleport(@Nonnull ItemStack equipped, @Nonnull EnumHand hand, @Nonnull EntityPlayer player) {
+    public static boolean doTeleport(@Nonnull ItemStack equipped, @Nonnull EnumHand hand,
+                                     @Nonnull EntityPlayer player) {
         TravelSource source = TravelSource.TELEPORT_STAFF_BLINK;
 
         Vector3d eye = Util.getEyePositionEio(player);
@@ -209,7 +210,6 @@ public class TravelController {
         double playerHeight = player.getYOffset();
         double teleDistance = TeleportConfig.rangeTeleportStaff2Blink.get() + 2;
         Vec3d eye3 = new Vec3d(eye.x, eye.y, eye.z);
-
 
         double maxDistance = TeleportConfig.rangeTeleportStaff2Block.get() + 2;
         double currDistance = 0;
@@ -228,7 +228,8 @@ public class TravelController {
 
             RayTraceResult p = player.world.rayTraceBlocks(eye3, end, !TeleportConfig.enableBlinkNonSolidBlocks.get());
             if (p != null) {
-                teleDistance = VecmathUtil.distance(eye, new Vector3d(p.getBlockPos().getX() + 0.5, p.getBlockPos().getY() + 0.5, p.getBlockPos().getZ() + 0.5));
+                teleDistance = VecmathUtil.distance(eye, new Vector3d(p.getBlockPos().getX() + 0.5,
+                        p.getBlockPos().getY() + 0.5, p.getBlockPos().getZ() + 0.5));
                 break;
             }
 
@@ -242,8 +243,9 @@ public class TravelController {
         Vec3d end = new Vec3d(sample.x, sample.y, sample.z);
 
         RayTraceResult p = player.world.rayTraceBlocks(eye3, end, !TeleportConfig.enableBlinkNonSolidBlocks.get());
-        if(p != null) {
-            teleDistance = VecmathUtil.distance(eye, new Vector3d(p.getBlockPos().getX() + 0.5, p.getBlockPos().getY() + 0.5, p.getBlockPos().getZ() + 0.5));
+        if (p != null) {
+            teleDistance = VecmathUtil.distance(eye, new Vector3d(p.getBlockPos().getX() + 0.5,
+                    p.getBlockPos().getY() + 0.5, p.getBlockPos().getZ() + 0.5));
         }
 
         double distanceIncrement = -2;
@@ -267,8 +269,6 @@ public class TravelController {
         }
         return false;
     }
-
-
 
     private static boolean isBlackListedBlock(@Nonnull EntityPlayer player, @Nonnull RayTraceResult pos,
                                               @Nonnull IBlockState hitBlock) {
@@ -298,7 +298,8 @@ public class TravelController {
         return false;
     }
 
-    private static boolean doBlink(@Nonnull EntityPlayer player, @Nonnull ItemStack equipped, @Nonnull EnumHand hand, TravelSource source,
+    private static boolean doBlink(@Nonnull EntityPlayer player, @Nonnull ItemStack equipped, @Nonnull EnumHand hand,
+                                   TravelSource source,
                                    @Nonnull BlockPos coord,
                                    boolean conserveMomentum) {
         return travelToLocation(player, equipped, hand, source, coord, conserveMomentum);
